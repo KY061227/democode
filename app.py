@@ -144,6 +144,9 @@ def render_live_keyboard_input(label: str, placeholder: str):
     }
     if supports_live:
         kwargs["live"] = "150ms"
+    else:
+        st.warning("Update Streamlit for spelling suggestions while typing. "
+                   "This version updates after Enter or leaving the input field.")
     st.text_input(label, **kwargs)
 
 
@@ -317,7 +320,7 @@ else:
 # ==============================================================================
 # SHARED TOP-3 MOBILE KEYBOARD BAR & ACTIONS
 # ==============================================================================
-# Correction is offered only after a word is completed with whitespace.
+# Check the current word on each live input update, with or without a space.
 draft_for_spelling = st.session_state.typed_text
 signature = (st.session_state.app_mode, active_profile, draft_for_spelling)
 if not draft_for_spelling:

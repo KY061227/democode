@@ -157,8 +157,8 @@ class OPTKeyboardPredictor:
                 self.user_freq_cache[key] = self.user_freq_cache.get(key, 0) + 1
 
     def spelling_suggestion(self, text, context_before=""):
-        """Check the last completed word, preserving its exact character span."""
-        match = re.search(r"(?<![\w'’@/.-])([A-Za-z]+)([,.!?;:]*\s+)$", text)
+        """Check the current last word, including input without a trailing space."""
+        match = re.search(r"(?<![\w'’@/.-])([A-Za-z]+)([,.!?;:]*\s*)$", text)
         if match is None:
             return None
         word = match.group(1)
