@@ -75,13 +75,6 @@ st.markdown(
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18) !important;
         transition: background-color 0.15s ease, transform 0.1s ease !important;
     }
-    .st-key-send_message_btn button p {
-        color: #FFFFFF !important;
-        font-size: 1.9rem !important;
-        font-weight: 700 !important;
-        line-height: 1 !important;
-        margin: 0 !important;
-    }
     .st-key-send_message_btn button:hover {
         background-color: #222222 !important;
         border-color: #222222 !important;
