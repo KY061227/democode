@@ -30,8 +30,8 @@ st.markdown(
         font-weight: 500;
         margin-bottom: 0.35rem;
     }
-    /* Force input bar + WhatsApp send button onto a single horizontal row on ALL screen widths */
-    [data-testid="stHorizontalBlock"]:has(.st-key-whatsapp_send_btn) {
+    /* Force input bar + send button onto a single horizontal row on ALL screen widths */
+    [data-testid="stHorizontalBlock"]:has(.st-key-send_message_btn) {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
@@ -39,31 +39,30 @@ st.markdown(
         gap: 0.45rem !important;
         width: 100% !important;
     }
-    [data-testid="stHorizontalBlock"]:has(.st-key-whatsapp_send_btn) > [data-testid="stColumn"]:first-child,
-    [data-testid="stHorizontalBlock"]:has(.st-key-whatsapp_send_btn) > [data-testid="column"]:first-child {
+    [data-testid="stHorizontalBlock"]:has(.st-key-send_message_btn) > [data-testid="stColumn"]:first-child,
+    [data-testid="stHorizontalBlock"]:has(.st-key-send_message_btn) > [data-testid="column"]:first-child {
         flex: 1 1 auto !important;
         min-width: 0 !important;
         width: auto !important;
     }
-    [data-testid="stHorizontalBlock"]:has(.st-key-whatsapp_send_btn) > [data-testid="stColumn"]:last-child,
-    [data-testid="stHorizontalBlock"]:has(.st-key-whatsapp_send_btn) > [data-testid="column"]:last-child {
+    [data-testid="stHorizontalBlock"]:has(.st-key-send_message_btn) > [data-testid="stColumn"]:last-child,
+    [data-testid="stHorizontalBlock"]:has(.st-key-send_message_btn) > [data-testid="column"]:last-child {
         flex: 0 0 2.6rem !important;
         min-width: 2.6rem !important;
         max-width: 2.6rem !important;
         width: 2.6rem !important;
     }
-    /* Rounded WhatsApp-style text bar */
+    /* Rounded text bar */
     [data-testid="stTextInput"] div[data-baseweb="input"] {
         border-radius: 20px !important;
         padding-left: 0.35rem !important;
     }
-    /* Circular WhatsApp-style inline send button beside the input bar */
-    .st-key-whatsapp_send_btn button,
-    .stButton > button[kind="primary"] {
-        background-color: #25D366 !important;
-        border-color: #25D366 !important;
+    /* Black rounded-square send button beside the input bar */
+    .st-key-send_message_btn button {
+        background-color: #000000 !important;
+        border-color: #000000 !important;
         color: #FFFFFF !important;
-        border-radius: 50% !important;
+        border-radius: 12px !important;
         width: 2.6rem !important;
         height: 2.6rem !important;
         min-height: 2.6rem !important;
@@ -73,19 +72,17 @@ st.markdown(
         justify-content: center !important;
         font-size: 1.1rem !important;
         line-height: 1 !important;
-        box-shadow: 0 2px 6px rgba(37, 211, 102, 0.35) !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18) !important;
         transition: background-color 0.15s ease, transform 0.1s ease !important;
     }
-    .st-key-whatsapp_send_btn button:hover,
-    .stButton > button[kind="primary"]:hover {
-        background-color: #1EBE5D !important;
-        border-color: #1EBE5D !important;
+    .st-key-send_message_btn button:hover {
+        background-color: #222222 !important;
+        border-color: #222222 !important;
         color: #FFFFFF !important;
     }
-    .st-key-whatsapp_send_btn button:active,
-    .stButton > button[kind="primary"]:active {
-        background-color: #128C7E !important;
-        border-color: #128C7E !important;
+    .st-key-send_message_btn button:active {
+        background-color: #111111 !important;
+        border-color: #111111 !important;
         transform: scale(0.95);
     }
     /* Keep the 4 suggestion chips on a single horizontal row on mobile screens */
@@ -353,8 +350,8 @@ def render_live_keyboard_input(
         st.text_input(label, **kwargs)
     with send_col:
         st.button(
-            "➤",
-            key="whatsapp_send_btn",
+            "↑",
+            key="send_message_btn",
             type="primary",
             help=send_tooltip,
             on_click=send_current_message,
