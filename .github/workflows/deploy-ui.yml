@@ -31,7 +31,7 @@ jobs:
       - name: Upload UI
         uses: actions/upload-pages-artifact@v4
         with:
-          path: opt-keyboard/web
+          path: web
 
       - name: Deploy website
         id: deployment
