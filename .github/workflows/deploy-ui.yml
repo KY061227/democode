@@ -15,24 +15,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
       - name: Download repository
         uses: actions/checkout@v6
 
+      - name: Check website files
+        run: |
+          test -f web/index.html
+          test -f web/app.css
+          test -f web/app.js
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload UI
+      - name: Upload website
         uses: actions/upload-pages-artifact@v4
         with:
+          name: github-pages
           path: web
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages
+          
