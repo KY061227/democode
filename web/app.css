@@ -243,3 +243,7 @@ dialog::backdrop { background: #17251965; }
 .correction button { min-height: 34px; }
 .correction-choice:hover { background: #f2e8c5; }
 .correction-keep { margin-left: auto !important; }
+
+#load-model { margin-top: 14px; background: #fff; color: #17261c; border: 0; border-radius: 8px; padding: 10px 16px; font-weight: 650; }
+#load-model:disabled { opacity: .65; }
+#download-note { margin-top: 10px; font-size: 12px; line-height: 1.5; color: #d7e3cd; }

@@ -84,7 +84,9 @@
         </section>
         <section class="engine-panel" aria-labelledby="engine-heading">
           <div class="aside-title"><span class="icon-tile"><svg class="icon"><use href="#i-cpu"/></svg></span><h2 id="engine-heading">Prediction engine</h2></div>
-          <div class="engine-name">OPT-125M</div><div id="actual-model" class="engine-status-line"></div>
+          <div class="engine-name">OPT-125M</div>
+          <button id="load-model" type="button">Load model</button>
+          <p id="download-note">Downloads your converted model to this browser. Initial loading may take a few minutes.</p><div id="actual-model" class="engine-status-line"></div>
           <div class="engine-status-line"><span id="engine-status" role="status">Connecting…</span></div>
           <dl class="engine-metrics"><div><dt>Request processing</dt><dd id="latency">—</dd></div><div><dt>Profile</dt><dd id="profile-label">Solo</dd></div></dl>
         </section>
@@ -94,7 +96,7 @@
   <dialog id="settings-dialog" aria-labelledby="settings-title">
     <div class="dialog-head"><h2 id="settings-title">Engine settings</h2><button type="button" id="close-settings" aria-label="Close settings"><svg class="icon"><use href="#i-close"/></svg></button></div>
     <div class="settings-fields">
-      <label class="setting" for="variant"><span>Model variant</span><select id="variant"><option value="lora_int8">LoRA fine-tuned · INT8</option><option value="lora_fp32">LoRA fine-tuned · FP32</option><option value="base">Base OPT-125M · FP32</option></select></label>
+      <label class="setting" for="variant"><span>Model variant</span><select id="variant" disabled><option value="lora_int8">Your fine-tuned OPT · browser INT8</option></select></label>
       <div class="footprint">Model size estimate <span id="footprint">—</span></div>
       <label class="setting" for="boost"><span>Personalization boost <output id="boost-value" for="boost">0.35</output></span><input id="boost" type="range" min="0" max="1" step="0.05" value="0.35"><small>Give words you use often a higher rank.</small></label>
       <label class="switch-line"><span>Spelling suggestions</span><input id="spelling" type="checkbox" checked></label>

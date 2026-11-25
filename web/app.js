@@ -14,6 +14,17 @@
         ["Phone battery", "My phone battery is at 1%, do you have a charger?", "Yes, I have a "],
         ["Train meetup", "I just arrived at the station, where are you?", "I am on my "]]
     };
+    let loaded = false;
+    let worker;
+    let requestID = 0;
+    const pending = new Map();
+    function callEngine(type, payload) {
+      return new Promise((resolve, reject) => {
+        const id = ++requestID;
+        pending.set(id, {resolve, reject});
+        worker.postMessage({id,type,payload});
+      });
+    }
     let mode = "solo", version = 0, timer, busy = false, queued = false, preview = null;
     const profileName = () => mode === "solo" ? "Solo" : el("speaker").value;
     const profile = () => profiles[profileName()];
@@ -172,22 +183,18 @@
     }
     async function predict(requestVersion) {
       if (busy) { queued=true; return; }
+      if (!loaded) {
+        status("Click Load model to enable predictions", "idle");
+        el("suggestions").replaceChildren(make("span", "", "Load the model to see suggestions."));
+        el("suggestions").setAttribute("aria-busy", "false");
+        return;
+      }
       busy=true;
       try {
         const request = { draft:input.value, context: mode === "chat" ? logs.chat.slice(-2).map(m=>m.text) : [],
           variant:el("variant").value, cacheWeight:Number(el("boost").value), spelling:el("spelling").checked,
           cache:Object.fromEntries(profile().cache), trustedWords:[...profile().trusted] };
-        const encoder = new TextEncoder();
-        while (encoder.encode(JSON.stringify(request)).length > 128 * 1024) {
-          const keys = Object.keys(request.cache);
-          if (keys.length) delete request.cache[keys[keys.length - 1]];
-          else if (request.trustedWords.length) request.trustedWords.pop();
-          else throw new Error("This message is too large to send.");
-        }
-        const response = await fetch("/api/predict", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(request)});
-        if (!response.headers.get("content-type")?.includes("application/json")) throw new Error("Run python web_app.py and open http://127.0.0.1:8765.");
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || "Prediction failed.");
+        const result = await callEngine("predict", request);
         if (requestVersion===version) showPrediction(result);
       } catch(error) { if (requestVersion===version) showError(error.message); }
       finally {
@@ -204,6 +211,35 @@
       el("suggestions").setAttribute("aria-busy","true"); status("Predicting…","loading");
       timer=setTimeout(() => void predict(requestVersion),delay);
     }
+    el("load-model").addEventListener("click", async () => {
+      const loadButton = el("load-model");
+      loadButton.disabled = true;
+      try {
+        if (!worker) {
+          worker = new Worker(new URL("model-worker.bundle.js", document.baseURI), {type:"module"});
+          worker.onmessage = ({data}) => {
+            if (data.type === "status") { status(data.message,"loading"); return; }
+            const task = pending.get(data.id);
+            if (!task) return;
+            pending.delete(data.id);
+            if (data.error) task.reject(new Error(data.error)); else task.resolve(data.result);
+          };
+          worker.onerror = () => {
+            for (const task of pending.values()) task.reject(new Error("Model worker could not start. Check the deployment build."));
+            pending.clear();worker.terminate();worker=null;loaded=false;loadButton.disabled=false;
+          };
+        }
+        status("Loading model…", "loading");
+        await callEngine("load", {});
+        loaded = true;
+        loadButton.textContent = "Model loaded";
+        el("download-note").hidden = true;
+        schedule(0);
+      } catch (error) {
+        loadButton.disabled = false;
+        showError(error.message);
+      }
+    });
     const settings=el("settings-dialog");
     el("open-settings").addEventListener("click",()=>settings.showModal());
     el("close-settings").addEventListener("click",()=>settings.close());
